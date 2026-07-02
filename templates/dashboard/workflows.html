@@ -1,0 +1,30 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="page-header">
+  <div class="page-title">Workflows de validation</div>
+</div>
+<div class="card">
+  <table>
+    <thead><tr><th>Document</th><th>Circuit</th><th>Étape courante</th><th>Statut</th><th>Démarré le</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for wf in workflows %}
+    <tr>
+      <td style="font-weight:600;">{{ wf.document.titre }}</td>
+      <td>{{ wf.circuit.nom }}</td>
+      <td>{{ wf.etape_courante|default:"—" }}</td>
+      <td>
+        {% if wf.statut == 'APPROUVE' %}<span class="badge badge-approuve">Approuvé</span>
+        {% elif wf.statut == 'EN_COURS' %}<span class="badge badge-validation">En cours</span>
+        {% elif wf.statut == 'REJETE' %}<span class="badge badge-rejete">Rejeté</span>
+        {% else %}<span class="badge badge-brouillon">{{ wf.get_statut_display }}</span>{% endif %}
+      </td>
+      <td style="color:#898781;">{{ wf.date_debut|date:"d/m/Y" }}</td>
+      <td><a href="/workflows/{{ wf.pk }}/" class="btn btn-secondary" style="font-size:11px;padding:4px 8px;">Voir</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6" style="text-align:center;color:#898781;padding:20px;">Aucun workflow</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

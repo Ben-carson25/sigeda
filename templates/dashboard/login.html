@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>SIGEDA — Connexion</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
+body{background:#1F3864;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.card{background:#fff;border-radius:12px;padding:2rem;width:400px;}
+.logo{text-align:center;margin-bottom:1.5rem;}
+.logo-icon{width:56px;height:56px;background:#1F3864;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:10px;}
+h1{font-size:20px;font-weight:700;color:#0b0b0b;margin-bottom:4px;}
+.subtitle{font-size:12px;color:#898781;}
+label{font-size:12px;font-weight:600;color:#52514e;display:block;margin-bottom:4px;margin-top:12px;}
+input,select{width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;background:#fff;}
+input:focus,select:focus{outline:2px solid #185FA5;border-color:#185FA5;}
+.btn{width:100%;padding:10px;background:#1F3864;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;}
+.btn:hover{background:#2E5FA3;}
+.alert{background:#FCEBEB;color:#A32D2D;border:1px solid #A32D2D;padding:8px 12px;border-radius:6px;font-size:12px;margin-top:10px;}
+.info{background:#E6F1FB;color:#185FA5;padding:8px 12px;border-radius:6px;font-size:11px;margin-top:12px;display:flex;align-items:center;gap:6px;}
+.footer{text-align:center;font-size:11px;color:#898781;margin-top:12px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">📄</div>
+    <h1>SIGEDA</h1>
+    <p class="subtitle">Système intégré de gestion électronique de documents</p>
+    <p class="subtitle">ASECNA — 19 États membres</p>
+  </div>
+  {% if error %}
+  <div class="alert">{{ error }}</div>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <label>Entité</label>
+    <select name="entite">
+      {% for entite in entites %}
+      <option value="{{ entite.id }}">{{ entite.libelle }} — {{ entite.pays }}</option>
+      {% endfor %}
+    </select>
+    <label>Nom d'utilisateur / Matricule</label>
+    <input type="text" name="username" placeholder="admin ou ASE-2024-0042" required autofocus/>
+    <label>Mot de passe</label>
+    <input type="password" name="password" placeholder="••••••••" required/>
+    <button type="submit" class="btn">Se connecter</button>
+  </form>
+  <div class="info">🔒 Connexion chiffrée HTTPS · Token JWT · Session 8h</div>
+  <p class="footer">Problème de connexion ? Contacter l'administrateur</p>
+</div>
+</body>
+</html>

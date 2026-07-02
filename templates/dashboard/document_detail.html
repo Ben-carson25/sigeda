@@ -1,0 +1,33 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="page-title">{{ doc.titre }}</div>
+    <div class="page-subtitle">{{ doc.get_type_document_display }} · {{ doc.entite_emettrice }}</div>
+  </div>
+  {% if doc.statut == 'APPROUVE' %}<span class="badge badge-approuve" style="font-size:13px;padding:6px 12px;">Approuvé</span>
+  {% elif doc.statut == 'EN_VALIDATION' %}<span class="badge badge-validation" style="font-size:13px;padding:6px 12px;">En validation</span>
+  {% elif doc.statut == 'REJETE' %}<span class="badge badge-rejete" style="font-size:13px;padding:6px 12px;">Rejeté</span>
+  {% else %}<span class="badge badge-brouillon" style="font-size:13px;padding:6px 12px;">{{ doc.get_statut_display }}</span>{% endif %}
+</div>
+<div class="card">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">
+    <div><strong>Auteur :</strong> {{ doc.auteur.get_full_name }}</div>
+    <div><strong>Direction :</strong> {{ doc.direction_emettrice|default:"—" }}</div>
+    <div><strong>Date :</strong> {{ doc.date_document|date:"d/m/Y" }}</div>
+    <div><strong>Classification :</strong> {{ doc.get_classification_display }}</div>
+    <div><strong>Mots-clés :</strong> {{ doc.mots_cles|default:"—" }}</div>
+    <div><strong>Créé le :</strong> {{ doc.date_creation|date:"d/m/Y à H:i" }}</div>
+  </div>
+</div>
+{% if workflows %}
+<div class="card">
+  <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Circuits de validation</div>
+  {% for wf in workflows %}
+  <a href="/workflows/{{ wf.pk }}/" class="btn btn-secondary" style="margin-bottom:6px;">
+    {{ wf.circuit.nom }} — {{ wf.get_statut_display }}
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="page-title">Déposer un document</div>
+    <div class="page-subtitle">Module 2 — Dépôt, indexation et recherche</div>
+  </div>
+  <span style="font-size:11px;background:#E6F1FB;color:#0C447C;padding:4px 10px;border-radius:10px;">Version 1.0 sera créée</span>
+</div>
+<div class="card">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Titre du document *</label>
+        <input type="text" name="titre" required placeholder="Ex : MEI DG-2026-089"/>
+      </div>
+      <div class="form-group">
+        <label>Type de document *</label>
+        <select name="type_document" required>
+          {% for val,label in types %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Direction émettrice</label>
+        <input type="text" name="direction_emettrice" placeholder="Ex : Direction Générale"/>
+      </div>
+      <div class="form-group">
+        <label>Date du document *</label>
+        <input type="date" name="date_document" required/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Mots-clés</label>
+      <input type="text" name="mots_cles" placeholder="Séparer par des virgules"/>
+    </div>
+    <div class="form-group">
+      <label>Fichier (PDF, DOCX, XLSX)</label>
+      <input type="file" name="fichier" accept=".pdf,.docx,.xlsx,.png,.jpg"/>
+    </div>
+    <div class="form-group">
+      <label>Soumettre directement au circuit</label>
+      <select name="circuit_id">
+        <option value="">Enregistrer en brouillon</option>
+        {% for c in circuits %}<option value="{{ c.pk }}">{{ c.nom }} ({{ c.delai_max }} jours)</option>{% endfor %}
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:12px;border-top:1px solid #e0dfd8;margin-top:12px;">
+      <a href="/documents/" class="btn btn-secondary">Annuler</a>
+      <button type="submit" class="btn btn-primary">Déposer le document</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

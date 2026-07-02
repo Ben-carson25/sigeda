@@ -1,0 +1,61 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="page-title">Documents</div>
+    <div class="page-subtitle">{{ total }} document{{ total|pluralize }} · {{ user.entite }}</div>
+  </div>
+  <a href="/documents/deposer/" class="btn btn-primary">+ Déposer</a>
+</div>
+<div class="card">
+  <form method="get" style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+    <div style="flex:2;min-width:200px;">
+      <label>Recherche plein texte</label>
+      <input type="text" name="q" value="{{ q }}" placeholder="Titre, mots-clés..."/>
+    </div>
+    <div style="flex:1;min-width:150px;">
+      <label>Type</label>
+      <select name="type">
+        <option value="">Tous les types</option>
+        {% for val,label in types %}<option value="{{ val }}" {% if type_doc == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div style="flex:1;min-width:130px;">
+      <label>Statut</label>
+      <select name="statut">
+        <option value="">Tous</option>
+        {% for val,label in statuts %}<option value="{{ val }}" {% if statut == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Rechercher</button>
+    {% if q or type_doc or statut %}<a href="/documents/" class="btn btn-secondary">Effacer</a>{% endif %}
+  </form>
+</div>
+<div class="card">
+  <table>
+    <thead><tr><th>Titre</th><th>Type</th><th>Entité</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for doc in documents %}
+    <tr>
+      <td>
+        <div style="font-weight:600;">{{ doc.titre }}</div>
+        <div style="font-size:10px;color:#898781;">{{ doc.auteur.get_full_name }}</div>
+      </td>
+      <td>{{ doc.get_type_document_display }}</td>
+      <td>{{ doc.entite_emettrice }}</td>
+      <td style="color:#898781;">{{ doc.date_creation|date:"d/m/Y" }}</td>
+      <td>
+        {% if doc.statut == 'APPROUVE' %}<span class="badge badge-approuve">Approuvé</span>
+        {% elif doc.statut == 'EN_VALIDATION' %}<span class="badge badge-validation">En validation</span>
+        {% elif doc.statut == 'REJETE' %}<span class="badge badge-rejete">Rejeté</span>
+        {% else %}<span class="badge badge-brouillon">{{ doc.get_statut_display }}</span>{% endif %}
+      </td>
+      <td><a href="/documents/{{ doc.pk }}/" class="btn btn-secondary" style="font-size:11px;padding:4px 8px;">Voir</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6" style="text-align:center;color:#898781;padding:20px;">Aucun document trouvé</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

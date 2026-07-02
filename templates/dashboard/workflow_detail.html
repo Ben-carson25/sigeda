@@ -1,0 +1,68 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="page-title">{{ wf.document.titre }}</div>
+    <div class="page-subtitle">Circuit : {{ wf.circuit.nom }} · {{ wf.get_statut_display }}</div>
+  </div>
+  {% if wf.statut == 'APPROUVE' %}<span class="badge badge-approuve" style="font-size:12px;padding:5px 12px;">Approuvé</span>
+  {% elif wf.statut == 'EN_COURS' %}<span class="badge badge-validation" style="font-size:12px;padding:5px 12px;">En cours</span>
+  {% elif wf.statut == 'REJETE' %}<span class="badge badge-rejete" style="font-size:12px;padding:5px 12px;">Rejeté</span>{% endif %}
+</div>
+<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;">
+  <div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px;">Étapes du circuit</div>
+      {% for etape in etapes %}
+      <div style="display:flex;gap:12px;margin-bottom:12px;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;
+            {% if wf.etape_courante == etape and wf.statut == 'EN_COURS' %}background:#1F3864;color:#fff;
+            {% elif wf.statut == 'APPROUVE' %}background:#EAF3DE;color:#27500A;
+            {% else %}background:#F1EFE8;color:#898781;border:1px solid #e0dfd8;{% endif %}">
+            {{ etape.ordre }}
+          </div>
+          {% if not forloop.last %}<div style="width:2px;height:30px;background:#e0dfd8;margin-top:2px;"></div>{% endif %}
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;">{{ etape.libelle }}</div>
+          <div style="font-size:11px;color:#898781;">{{ etape.validateur.get_full_name }}</div>
+          {% if wf.etape_courante == etape and wf.statut == 'EN_COURS' %}
+          <span class="badge badge-validation" style="margin-top:4px;">Étape courante</span>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% if wf.statut == 'EN_COURS' and wf.etape_courante.validateur == user %}
+    <div class="card" style="border:1px solid #185FA5;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Votre décision</div>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Commentaire</label>
+          <textarea name="commentaire" rows="3" placeholder="Commentaire (facultatif)..."></textarea>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="submit" name="type_action" value="APPROUVE" class="btn btn-success" style="flex:1;">✓ Approuver</button>
+          <button type="submit" name="type_action" value="RENVOYE" class="btn btn-warning" style="flex:1;">↩ Renvoyer</button>
+          <button type="submit" name="type_action" value="REJETE" class="btn btn-danger" style="flex:1;">✕ Rejeter</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Journal d'audit</div>
+    {% for action in actions %}
+    <div style="padding:8px;border-bottom:1px solid #e0dfd8;">
+      <div style="font-size:11px;font-weight:600;">{{ action.date_action|date:"d/m/Y à H:i" }}</div>
+      <div style="font-size:11px;color:#52514e;">{{ action.acteur.get_full_name }} — {{ action.get_type_action_display }}</div>
+      {% if action.commentaire %}<div style="font-size:11px;color:#898781;font-style:italic;margin-top:2px;">"{{ action.commentaire }}"</div>{% endif %}
+    </div>
+    {% empty %}
+    <p style="font-size:12px;color:#898781;">Aucune action enregistrée</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
