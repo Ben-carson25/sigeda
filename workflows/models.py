@@ -78,3 +78,44 @@ class ActionWorkflow(models.Model):
 
     def __str__(self):
         return f"{self.acteur} — {self.get_type_action_display()} — {self.date_action.strftime('%d/%m/%Y %H:%M')}"
+
+
+class JournalAudit(models.Model):
+    """Journal d'audit transversal, volontairement non cloisonné par entité,
+    pour permettre des audits OACI à l'échelle de l'Agence (voir mémoire, 2.3.4)."""
+    TYPE_OPERATIONS = [
+        ('DEPOT', 'Dépôt de document'),
+        ('NOUVELLE_VERSION', 'Dépôt de nouvelle version'),
+        ('SOUMISSION', 'Soumission au circuit de validation'),
+        ('DECISION', 'Décision de validation'),
+        ('CONSULTATION', 'Consultation / prévisualisation'),
+        ('CONNEXION', 'Connexion utilisateur'),
+        ('ADMINISTRATION', 'Opération d\'administration'),
+    ]
+    acteur         = models.ForeignKey(Utilisateur, on_delete=models.PROTECT, related_name='operations_audit')
+    type_operation = models.CharField(max_length=20, choices=TYPE_OPERATIONS)
+    objet_cible    = models.CharField(max_length=255)
+    date_operation = models.DateTimeField(auto_now_add=True)
+    adresse_ip     = models.GenericIPAddressField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Journal d'audit"
+        verbose_name_plural = "Journal d'audit"
+        ordering = ['-date_operation']
+
+    def __str__(self):
+        return f"{self.date_operation:%d/%m/%Y %H:%M} — {self.acteur} — {self.get_type_operation_display()}"
+
+    @classmethod
+    def enregistrer(cls, acteur, type_operation, objet_cible, request=None):
+        """Point d'entrée unique de journalisation (appelable depuis les vues)."""
+        adresse_ip = None
+        if request is not None:
+            adresse_ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() \
+                or request.META.get('REMOTE_ADDR')
+        return cls.objects.create(
+            acteur=acteur,
+            type_operation=type_operation,
+            objet_cible=objet_cible,
+            adresse_ip=adresse_ip,
+        )
