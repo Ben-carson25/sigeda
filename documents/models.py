@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import FileExtensionValidator
 from accounts.models import Utilisateur, Entite
 import hashlib, os
 
@@ -50,7 +51,13 @@ def upload_path(instance, filename):
 class VersionDocument(models.Model):
     document        = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='versions')
     numero_version  = models.CharField(max_length=10)
-    fichier         = models.FileField(upload_to=upload_path)
+    fichier         = models.FileField(
+        upload_to=upload_path,
+        validators=[FileExtensionValidator(
+            allowed_extensions=['pdf', 'docx', 'xlsx', 'png', 'jpeg', 'jpg'],
+            message="Format non supporté. Formats approuvés : PDF, DOCX, XLSX, PNG, JPEG.",
+        )],
+    )
     taille_fichier  = models.BigIntegerField(default=0)
     format_fichier  = models.CharField(max_length=10, blank=True)
     auteur          = models.ForeignKey(Utilisateur, on_delete=models.PROTECT)
