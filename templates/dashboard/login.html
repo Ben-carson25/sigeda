@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -24,7 +25,7 @@ input:focus,select:focus{outline:2px solid #185FA5;border-color:#185FA5;}
 <body>
 <div class="card">
   <div class="logo">
-    <div class="logo-icon">📄</div>
+    <img src="{% static 'img/asecna-logo.png' %}" alt="ASECNA" style="width:64px;height:64px;object-fit:contain;margin-bottom:10px;">
     <h1>SIGEDA</h1>
     <p class="subtitle">Système intégré de gestion électronique de documents</p>
     <p class="subtitle">ASECNA — 19 États membres</p>
