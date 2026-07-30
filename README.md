@@ -16,7 +16,7 @@ Démonstration en ligne : https://sigeda.onrender.com
 
 - **Backend :** Python 3.11 / Django 4.2
 - **API REST :** Django REST Framework + JWT
-- **Base de données :** PostgreSQL (local et production — pas de repli SQLite) ;
+- **Base de données :** PostgreSQL (local et production) ;
   migration Oracle documentée pour l'environnement de production ASECNA
 - **Serveur :** Gunicorn + WhiteNoise
 - **Gestion de projet :** méthode Scrum, tableau Kanban Trello
@@ -30,7 +30,7 @@ Démonstration en ligne : https://sigeda.onrender.com
 
 ## Installation locale (Windows / Git Bash)
 
-\`\`\`bash
+
 # 1. Cloner le dépôt
 git clone https://github.com/Ben-carson25/sigeda.git
 cd sigeda
@@ -65,10 +65,6 @@ python manage.py runserver
 | Compte | Rôle | Entité | Mot de passe |
 |---|---|---|---|
 | \`admin.demo\` | Administrateur | Siège de Dakar | \`Sigeda#2026\` |
-| \`gestionnaire.demo\` | Gestionnaire documentaire | Siège de Dakar | \`Sigeda#2026\` |
-| \`validateur.demo\` | Validateur | Siège de Dakar | \`Sigeda#2026\` |
-| \`lecteur.demo\` | Lecteur | Siège de Dakar | \`Sigeda#2026\` |
-| \`gestionnaire.ci\` | Gestionnaire (cloisonnement) | Représentation de Côte d'Ivoire | \`Sigeda#2026\` |
 
 Le compte \`gestionnaire.ci\` permet de démontrer le cloisonnement par entité :
 il ne voit pas les documents du Siège.
