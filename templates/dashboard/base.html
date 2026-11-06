@@ -71,10 +71,14 @@ label{font-size:12px;font-weight:600;color:#52514e;display:block;margin-bottom:4
   <nav class="sidebar">
     <a href="/" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">🏠 Tableau de bord</a>
     <a href="/documents/" class="{% if 'document' in request.resolver_match.url_name %}active{% endif %}">📄 Documents</a>
-    <a href="/documents/deposer/" class="{% if request.resolver_match.url_name == 'deposer' %}active{% endif %}">⬆ Déposer</a>
+    {% if user.peut_deposer %}<a href="/documents/deposer/" class="{% if request.resolver_match.url_name == 'deposer' %}active{% endif %}">⬆ Déposer</a>{% endif %}
     <a href="/workflows/" class="{% if 'workflow' in request.resolver_match.url_name %}active{% endif %}">🔀 Workflows</a>
-    <div class="section-label">Administration</div>
+    {% if user.voit_toutes_entites %}
+    <div class="section-label">Supervision</div>
+    <a href="/rapport/">📊 Rapport (CSV)</a>
+    {% endif %}
     {% if user.role == 'ADMIN' %}
+    <div class="section-label">Administration</div>
     <a href="/admin/">⚙ Admin Django</a>
     {% endif %}
   </nav>

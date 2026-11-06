@@ -20,6 +20,24 @@
     <div><strong>Créé le :</strong> {{ doc.date_creation|date:"d/m/Y à H:i" }}</div>
   </div>
 </div>
+<div class="card">
+  <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Versions</div>
+  {% for v in versions %}
+  <div style="font-size:12px;padding:6px 0;border-bottom:1px solid #e0dfd8;">
+    v{{ v.numero_version }} · {{ v.format_fichier }} · {{ v.date_creation|date:"d/m/Y H:i" }} · {{ v.auteur.get_full_name }}
+    {% if v.commentaire %}— <em>{{ v.commentaire }}</em>{% endif %}
+    {% if v.fichier %}<a href="{{ v.fichier.url }}" target="_blank">Ouvrir</a>{% endif %}
+  </div>
+  {% empty %}<p style="font-size:12px;color:#898781;">Aucune version</p>{% endfor %}
+  {% if peut_versionner %}
+  <form method="post" enctype="multipart/form-data" style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+    {% csrf_token %}
+    <input type="file" name="fichier" required>
+    <input type="text" name="commentaire" placeholder="Commentaire (facultatif)">
+    <button type="submit" class="btn btn-primary">Déposer une nouvelle version</button>
+  </form>
+  {% endif %}
+</div>
 {% if workflows %}
 <div class="card">
   <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Circuits de validation</div>

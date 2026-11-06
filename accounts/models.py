@@ -26,10 +26,11 @@ class Utilisateur(AbstractUser):
         ('ADMIN', 'Administrateur'),
         ('GESTIONNAIRE', 'Gestionnaire documentaire'),
         ('VALIDATEUR', 'Validateur'),
-        ('LECTEUR', 'Lecteur'),
+        ('AGENT', 'Agent'),
+        ('RESPONSABLE', 'Responsable'),
     ]
     matricule = models.CharField(max_length=20, unique=True, null=True, blank=True)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='LECTEUR')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='AGENT')
     entite = models.ForeignKey(Entite, on_delete=models.SET_NULL, null=True, blank=True, related_name='utilisateurs')
     actif = models.BooleanField(default=True)
 
@@ -39,7 +40,16 @@ class Utilisateur(AbstractUser):
     def __str__(self):
         return f"{self.get_full_name()} ({self.matricule})"
 
+    @property
+    def voit_toutes_entites(self):
+        """Administrateur et Responsable ont une vue transversale (UC-11, UC-15)."""
+        return self.role in ('ADMIN', 'RESPONSABLE')
+
+    @property
+    def peut_deposer(self):
+        return self.role in ('ADMIN', 'GESTIONNAIRE')
+
     def peut_acceder(self, document):
-        if self.role == 'ADMIN':
+        if self.voit_toutes_entites:
             return True
         return document.entite_emettrice == self.entite

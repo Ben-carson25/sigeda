@@ -14,7 +14,7 @@ class DocumentListView(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         qs = Document.objects.all()
-        if user.role != 'ADMIN':
+        if not user.voit_toutes_entites:
             qs = qs.filter(entite_emettrice=user.entite)
         q = self.request.query_params.get('q')
         if q:

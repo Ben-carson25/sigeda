@@ -16,7 +16,10 @@ class WorkflowListView(generics.ListAPIView):
     serializer_class = WorkflowSerializer
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
-        return Workflow.objects.filter(document__entite_emettrice=self.request.user.entite)
+        user = self.request.user
+        if user.voit_toutes_entites:
+            return Workflow.objects.all()
+        return Workflow.objects.filter(document__entite_emettrice=user.entite)
 
 class SoumettreworkflowView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -64,5 +67,10 @@ class ActionView(APIView):
             wf.date_fin = timezone.now()
             wf.save()
             wf.document.statut = StatutDocument.REJETE
+            wf.document.save()
+        elif type_action == 'RENVOYE':
+            wf.statut = 'EN_CORRECTION'
+            wf.save()
+            wf.document.statut = StatutDocument.BROUILLON
             wf.document.save()
         return Response(ActionWorkflowSerializer(action).data, status=201)

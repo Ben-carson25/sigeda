@@ -1,5 +1,5 @@
 """Crée les données de démonstration pour la soutenance :
-- 4 comptes utilisateurs (un par rôle), rattachés au Siège de Dakar
+- 5 comptes utilisateurs (un par profil), rattachés au Siège de Dakar
 - 1 compte gestionnaire rattaché à la Représentation de Côte d'Ivoire
   (pour démontrer le cloisonnement par entité)
 - 1 circuit de validation « MEI standard » à 4 étapes
@@ -17,7 +17,8 @@ COMPTES = [
     ('admin.demo',        'ASE-2026-0001', 'Aminata',  'DIALLO',  'ADMIN',        'SIEGE',  'Sigeda#2026'),
     ('gestionnaire.demo', 'ASE-2026-0002', 'Bénoni',   'MOUELE',  'GESTIONNAIRE', 'SIEGE',  'Sigeda#2026'),
     ('validateur.demo',   'ASE-2026-0003', 'Mamadou',  'FALL',    'VALIDATEUR',   'SIEGE',  'Sigeda#2026'),
-    ('lecteur.demo',      'ASE-2026-0004', 'Fatou',    'NDIAYE',  'LECTEUR',      'SIEGE',  'Sigeda#2026'),
+    ('agent.demo',        'ASE-2026-0004', 'Fatou',    'NDIAYE',  'AGENT',        'SIEGE',  'Sigeda#2026'),
+    ('responsable.demo',  'ASE-2026-0006', 'Ibrahima', 'SARR',    'RESPONSABLE',  'SIEGE',  'Sigeda#2026'),
     ('gestionnaire.ci',   'ASE-2026-0005', 'Koffi',    'KOUAME',  'GESTIONNAIRE', 'REP-CI', 'Sigeda#2026'),
 ]
 

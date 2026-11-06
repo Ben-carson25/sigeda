@@ -5,8 +5,18 @@
     <div class="page-title">Tableau de bord</div>
     <div class="page-subtitle">{{ user.entite }} · SIGEDA ASECNA</div>
   </div>
-  <a href="/documents/deposer/" class="btn btn-primary">+ Déposer un document</a>
+  {% if user.peut_deposer %}<a href="/documents/deposer/" class="btn btn-primary">+ Déposer un document</a>{% endif %}
 </div>
+{% if entites %}
+<form method="get" class="card" style="display:flex;gap:10px;align-items:center;padding:10px 14px;">
+  <label style="font-size:12px;font-weight:600;">Filtrer par entité</label>
+  <select name="entite" onchange="this.form.submit()">
+    <option value="">Toutes les entités</option>
+    {% for e in entites %}<option value="{{ e.pk }}" {% if e.pk|stringformat:"s" == entite_filtre %}selected{% endif %}>{{ e.libelle }}</option>{% endfor %}
+  </select>
+  <a href="/rapport/{% if entite_filtre %}?entite={{ entite_filtre }}{% endif %}" class="btn btn-secondary">Générer le rapport</a>
+</form>
+{% endif %}
 
 <!-- KPIs -->
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">

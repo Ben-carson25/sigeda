@@ -7,7 +7,8 @@
   </div>
   {% if wf.statut == 'APPROUVE' %}<span class="badge badge-approuve" style="font-size:12px;padding:5px 12px;">Approuvé</span>
   {% elif wf.statut == 'EN_COURS' %}<span class="badge badge-validation" style="font-size:12px;padding:5px 12px;">En cours</span>
-  {% elif wf.statut == 'REJETE' %}<span class="badge badge-rejete" style="font-size:12px;padding:5px 12px;">Rejeté</span>{% endif %}
+  {% elif wf.statut == 'REJETE' %}<span class="badge badge-rejete" style="font-size:12px;padding:5px 12px;">Rejeté</span>
+  {% elif wf.statut == 'EN_CORRECTION' %}<span class="badge badge-brouillon" style="font-size:12px;padding:5px 12px;">En correction</span>{% endif %}
 </div>
 <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;">
   <div>
@@ -41,7 +42,7 @@
         {% csrf_token %}
         <div class="form-group">
           <label>Commentaire</label>
-          <textarea name="commentaire" rows="3" placeholder="Commentaire (facultatif)..."></textarea>
+          <textarea name="commentaire" rows="3" placeholder="Commentaire (obligatoire pour un rejet)..."></textarea>
         </div>
         <div style="display:flex;gap:8px;">
           <button type="submit" name="type_action" value="APPROUVE" class="btn btn-success" style="flex:1;">✓ Approuver</button>

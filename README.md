@@ -16,9 +16,11 @@ Démonstration en ligne : https://sigeda.onrender.com
 
 - **Backend :** Python 3.11 / Django 4.2
 - **API REST :** Django REST Framework + JWT
-- **Base de données :** PostgreSQL (local et production) ;
-  migration Oracle documentée pour l'environnement de production ASECNA
+- **Base de données :** PostgreSQL 16 (local et démonstration), configurée via `DATABASE_URL` (.env)
 - **Serveur :** Gunicorn + WhiteNoise
+- **Hébergement :** Render.com (service web + PostgreSQL managé), déploiement depuis GitHub ;
+  `Dockerfile` et `docker-compose.yml` fournis pour une exécution en conteneur
+- **Fichiers :** stockés dans le dossier `media/` du serveur (système de fichiers)
 - **Gestion de projet :** méthode Scrum, tableau Kanban Trello
 
 ## Modules MVP
@@ -58,42 +60,51 @@ python manage.py seed_demo
 
 # 8. Lancer
 python manage.py runserver
-\`\`\`
+```
+
+## Profils utilisateurs
+
+Agent, Gestionnaire documentaire, Validateur, Administrateur, Responsable.
 
 ## Comptes de démonstration (jury)
 
-| Compte | Rôle | Entité | Mot de passe |
+| Compte | Profil | Entité | Mot de passe |
 |---|---|---|---|
-| \`admin.demo\` | Administrateur | Siège de Dakar | \`Sigeda#2026\` |
+| `admin.demo` | Administrateur | Siège de Dakar | `Sigeda#2026` |
+| `gestionnaire.demo` | Gestionnaire documentaire | Siège de Dakar | `Sigeda#2026` |
+| `validateur.demo` | Validateur | Siège de Dakar | `Sigeda#2026` |
+| `agent.demo` | Agent | Siège de Dakar | `Sigeda#2026` |
+| `responsable.demo` | Responsable | Siège de Dakar | `Sigeda#2026` |
+| `gestionnaire.ci` | Gestionnaire documentaire | Représentation Côte d'Ivoire | `Sigeda#2026` |
 
-Le compte \`gestionnaire.ci\` permet de démontrer le cloisonnement par entité :
+Le compte `gestionnaire.ci` permet de démontrer le cloisonnement par entité :
 il ne voit pas les documents du Siège.
 
 ## Tests
 
-\`\`\`bash
+```bash
 python manage.py test
-\`\`\`
+```
 
-15 tests unitaires couvrent les règles métier critiques : seed des 20 entités,
-cloisonnement par entité, validation des formats de fichiers, journalisation d'audit.
+31 tests unitaires couvrent les règles métier critiques : seed des 20 entités,
+cloisonnement par entité, profils, décision du validateur (approuver, renvoyer, rejeter), nouvelle version, rapport, validation des formats de fichiers, journalisation d'audit.
 
 ## Variables d'environnement (production — Render)
 
 | Variable | Valeur |
 |---|---|
-| \`SECRET_KEY\` | clé longue et aléatoire, jamais commitée |
-| \`DEBUG\` | \`False\` |
-| \`ALLOWED_HOSTS\` | \`sigeda.onrender.com\` |
-| \`DATABASE_URL\` | URL interne de la base PostgreSQL managée Render |
+| `SECRET_KEY` | clé longue et aléatoire, jamais commitée |
+| `DEBUG` | `False` |
+| `ALLOWED_HOSTS` | `sigeda.onrender.com` |
+| `DATABASE_URL` | URL interne de la base PostgreSQL managée Render |
 
 ## Structure du projet
 
-\`\`\`
+```
 config/      Configuration Django (settings 12-factor via .env)
 accounts/    Module 1 — Entités, utilisateurs, rôles, seed, commande seed_demo
 documents/   Module 2 — Documents, versions, validation des formats
 workflows/   Module 3 — Circuits, étapes, workflows, actions, journal d'audit
 dashboard/   Module 4 — Vues web, tableau de bord
 templates/   Gabarits HTML
-\`\`\`
+```

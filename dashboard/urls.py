@@ -9,5 +9,6 @@ urlpatterns = [
     path('documents/<int:pk>/', views.DocumentDetailView.as_view(), name='document-detail'),
     path('workflows/', views.WorkflowsView.as_view(), name='workflows-list'),
     path('workflows/<int:pk>/', views.WorkflowDetailView.as_view(), name='workflow-detail'),
+    path('rapport/', views.RapportView.as_view(), name='rapport'),
     path('api/dashboard/stats/', views.DashboardStatsAPI.as_view(), name='dashboard-stats'),
 ]
